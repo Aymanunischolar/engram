@@ -15,6 +15,11 @@ async def main():
     for result in results:
         print(result)
 
+    graph_html = Path(__file__).resolve().parent / "graph.html"
+    await cognee.visualize_graph(destination_file_path=str(graph_html))
+    print(f"\nGraph visualization written to {graph_html}")
+    print("Open it directly in a browser -- no server required.")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -18,6 +18,7 @@ htmlcov/
 .cognee_system/
 .cognee_cache/
 .data_storage/
+examples/graph.html
 
 .DS_Store
 Thumbs.db
