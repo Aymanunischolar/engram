@@ -1,0 +1,24 @@
+- id: q1
+  question: >-
+    What function does recall_codebase_memory call to actually query cognee,
+    and in which file is that tool defined?
+
+- id: q2
+  question: >-
+    Which class is responsible for walking a Python file's AST and turning
+    its functions and classes into CodeEntity objects?
+
+- id: q3
+  question: >-
+    What does ingest_repo do after parse_repo returns entities, before
+    calling cognee.add?
+
+- id: q4
+  question: >-
+    Why does Engram's ingest step parse Python files with an AST visitor
+    instead of just handing raw source files to cognee.add directly?
+
+- id: q5
+  question: >-
+    What has to be set in .env for cognee's graph engine to work correctly
+    on Windows, and why is it needed?
