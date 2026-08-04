@@ -8,6 +8,8 @@ license = { text = "MIT" }
 dependencies = [
     "cognee==1.4.1",
     "python-dotenv>=1.0.1",
+    "langgraph>=0.2.0",
+    "langchain-core>=0.3.0",
 ]
 
 [project.optional-dependencies]
