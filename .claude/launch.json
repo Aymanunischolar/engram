@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "cognee-ui",
+      "runtimeExecutable": ".venv/Scripts/python.exe",
+      "runtimeArgs": ["-m", "cognee", "-ui"],
+      "port": 3000
+    },
+    {
+      "name": "engram-api",
+      "runtimeExecutable": ".venv/Scripts/python.exe",
+      "runtimeArgs": ["-m", "uvicorn", "engram.api.app:app", "--host", "127.0.0.1", "--port", "8080"],
+      "port": 8080
+    }
+  ]
+}

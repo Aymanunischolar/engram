@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Engram</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --fg: #1a1a1a;
+    --bg: #ffffff;
+    --muted: #666;
+    --border: #ddd;
+    --accent: #2f5d3a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fg: #eaeaea;
+      --bg: #121212;
+      --muted: #999;
+      --border: #333;
+      --accent: #7fbf8f;
+    }
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    max-width: 640px;
+    margin: 4rem auto;
+    padding: 0 1.5rem;
+    color: var(--fg);
+    background: var(--bg);
+  }
+  h1 { margin-bottom: 0.25rem; }
+  p.tagline { color: var(--muted); margin-top: 0; }
+  form { display: flex; gap: 0.5rem; margin: 2rem 0 1rem; }
+  input[type="text"] {
+    flex: 1;
+    padding: 0.6rem 0.8rem;
+    font-size: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--fg);
+  }
+  button {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+  }
+  button:disabled { opacity: 0.6; cursor: default; }
+  #answer {
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    min-height: 3rem;
+    white-space: pre-wrap;
+    line-height: 1.5;
+  }
+  #answer.empty { color: var(--muted); }
+  footer { margin-top: 2rem; font-size: 0.85rem; color: var(--muted); }
+  footer a { color: var(--accent); }
+</style>
+</head>
+<body>
+  <h1>Engram</h1>
+  <p class="tagline">Ask a question about Engram's own codebase — answered via cognee's graph-native memory, not plain-text search.</p>
+
+  <form id="ask-form">
+    <input type="text" id="question" placeholder="What does recall_codebase_memory call?" autocomplete="off" />
+    <button type="submit" id="ask-button">Ask</button>
+  </form>
+
+  <div id="answer" class="empty">Answers may take a few seconds — the graph is queried live.</div>
+
+  <footer>
+    Built on <a href="https://github.com/topoteretes/cognee" target="_blank" rel="noopener">cognee</a>.
+    Source: <a href="https://github.com/Aymanunischolar/engram" target="_blank" rel="noopener">github.com/Aymanunischolar/engram</a>
+  </footer>
+
+  <script>
+    const API_URL = "https://engram-api.onrender.com";
+
+    const form = document.getElementById("ask-form");
+    const input = document.getElementById("question");
+    const button = document.getElementById("ask-button");
+    const answerEl = document.getElementById("answer");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const question = input.value.trim();
+      if (!question) return;
+
+      button.disabled = true;
+      answerEl.classList.remove("empty");
+      answerEl.textContent = "Thinking…";
+
+      try {
+        const response = await fetch(`${API_URL}/ask`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question }),
+        });
+
+        if (response.status === 429) {
+          answerEl.textContent = "Rate limited — please wait a minute before asking again.";
+        } else if (!response.ok) {
+          const body = await response.json().catch(() => ({}));
+          answerEl.textContent = `Error: ${body.detail || response.statusText}`;
+        } else {
+          const data = await response.json();
+          answerEl.textContent = data.answer;
+        }
+      } catch (err) {
+        answerEl.textContent = `Could not reach the API (${API_URL}). It may still be starting up on Render's free tier — try again in a moment.`;
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

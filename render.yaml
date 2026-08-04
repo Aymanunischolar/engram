@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: engram-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -e .
+    startCommand: uvicorn engram.api.app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_PROVIDER
+        value: gemini
+      - key: LLM_MODEL
+        value: gemini/gemini-flash-latest
+      - key: EMBEDDING_PROVIDER
+        value: gemini
+      - key: EMBEDDING_MODEL
+        value: gemini/gemini-embedding-001
+      - key: VECTOR_DB_PROVIDER
+        value: lancedb
+      - key: GRAPH_DATABASE_PROVIDER
+        value: kuzu
+      - key: GRAPH_DATABASE_SUBPROCESS_ENABLED
+        value: "false"
